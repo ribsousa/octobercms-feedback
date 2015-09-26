@@ -71,7 +71,11 @@ class EmailMethod implements Method
             // find the first admin user on the system
             $sendTo = $this->findAdminEmail();
         }
-
+        
+        // extracts the name and email array $data
+		$replyName  = current($data);
+		$replyEmail = next($data);
+        
         $loader = new \Twig_Loader_Array(array(
             'subject' => $methodData['subject'],
             'main' => $methodData['template']
@@ -79,9 +83,10 @@ class EmailMethod implements Method
         $twig = new \Twig_Environment($loader);
 
         $subject = $twig->render('subject', $data);
-        Mail::queue('ebussola.feedback::base-email', ['content' => $twig->render('main', $data)], function (Message $message) use ($sendTo, $subject) {
+        Mail::queue('ebussola.feedback::base-email', ['content' => $twig->render('main', $data)], function (Message $message) use ($sendTo, $subject, $replyEmail, $replyName) {
             $message->subject($subject);
             $message->to(array_map('trim', explode(',', $sendTo)));
+            $message->replyTo($replyEmail, $replyName);
         });
     }
 
