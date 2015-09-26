@@ -73,8 +73,8 @@ class EmailMethod implements Method
         }
         
         // extracts the name and email array $data
-		$replyName  = current($data);
-		$replyEmail = next($data);
+	$replyName  = current($data);
+	$replyEmail = next($data);
         
         $loader = new \Twig_Loader_Array(array(
             'subject' => $methodData['subject'],
